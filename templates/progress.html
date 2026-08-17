@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Progress</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        📚 StudyApp
+    </div>
+    <nav>
+    <a href="/">Home</a>
+    <a href="/progress">Progress</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+
+<section class="welcome">
+
+    <h1>📊 {{ session["username"] }}'s Progress</h1>
+
+    <p>Keep track of your learning.</p>
+
+</section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <h2>{{ quizzes }}</h2>
+            <p>Quizzes Completed</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ average }}%</h2>
+            <p>Average Score</p>
+        </div>
+
+    </section>
+
+    <h2>Quiz History</h2>
+
+    {% if results %}
+
+        <section class="progress-list">
+
+            {% for result in results %}
+
+                {% set percentage =
+                    ((result.score / result.total) * 100) | round | int
+                %}
+
+                <div class="progress-card">
+
+                    <h2>{{ result.subject }}</h2>
+
+                    <p>
+                        Score:
+                        <strong>
+                            {{ result.score }} / {{ result.total }}
+                        </strong>
+                    </p>
+
+                    <div class="progress-container">
+
+                        <div class="progress-bar"
+                             style="width: {{ percentage }}%">
+                        </div>
+
+                    </div>
+
+                    <p>{{ percentage }}%</p>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    {% else %}
+
+        <div class="progress-card">
+
+            <h2>No results yet</h2>
+
+            <p>Complete a quiz to start tracking your progress.</p>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Study App</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="logo">📚 StudyApp</div>
+        <nav>
+            
+    <a href="/">Home</a>
+    <a href="/progress">Progress</a>
+    <a href="/progress">📊 My Progress</a>
+<a href="/logout">🚪 Logout</a>
+
+</nav>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <h1>Welcome to your Study Dashboard</h1>
+            <p>Choose a subject and start learning.</p>
+        </section>
+
+        <section class="subjects">
+
+            <div class="subject-card">
+                <h2>Mathematics</h2>
+                <p>Practice mathematics questions.</p>
+                <button onclick="startSubject('Mathematics')">
+                    Start
+                </button>
+            </div>
+
+            <div class="subject-card">
+                <h2>Computer Studies</h2>
+                <p>Learn computers and programming.</p>
+                <button onclick="startSubject('Computer Studies')">
+                    Start
+                </button>
+            </div>
+
+            <div class="subject-card">
+                <h2>English</h2>
+                <p>Improve your English skills.</p>
+                <button onclick="startSubject('English')">
+                    Start
+                </button>
+            </div>
+
+            <div class="subject-card">
+                <h2>Science</h2>
+                <p>Practice science questions.</p>
+                <button onclick="startSubject('Science')">
+                    Start
+                </button>
+            </div>
+
+        </section>
+<section id="quiz" class="quiz" style="display: none;"></section>
+
+<section class="timer-card">
+
+    <section class="subjects-section">
+
+    <h2>📚 Choose a Subject</h2>
+
+    <div class="subject-grid">
+
+        <button class="subject-card" onclick="startSubject('Mathematics')">
+            ➗
+            <span>Mathematics</span>
+        </button>
+
+        <button class="subject-card" onclick="startSubject('English')">
+            📖
+            <span>English</span>
+        </button>
+
+        <button class="subject-card" onclick="startSubject('Biology')">
+            🧬
+            <span>Biology</span>
+        </button>
+
+        <button class="subject-card" onclick="startSubject('Computer Studies')">
+            💻
+            <span>Computer Studies</span>
+        </button>
+
+    </div>
+
+</section>
+
+    <h2>⏱️ Study Timer</h2>
+
+    <div id="timer">25:00</div>
+
+    <div class="timer-buttons">
+
+        <button onclick="startTimer()">
+            ▶ Start
+        </button>
+
+        <button onclick="pauseTimer()">
+            ⏸ Pause
+        </button>
+
+        <button onclick="resetTimer()">
+            ↻ Reset
+        </button>
+
+    </div>
+
+</section>
+<section class="notes-card">
+
+    <h2>📝 Study Notes</h2>
+
+    <textarea
+        id="studyNotes"
+        placeholder="Write your study notes here..."
+    ></textarea>
+
+    <div class="notes-buttons">
+
+        <button onclick="saveNotes()">
+            💾 Save Notes
+        </button>
+
+        <button onclick="clearNotes()">
+            🗑️ Clear
+        </button>
+
+    </div>
+
+    <p id="notesMessage"></p>
+
+</section>
+
+<section id="quizSection" class="quiz-section" style="display: none;">
+
+    <h2 id="quizTitle">Quiz</h2>
+
+    <p id="questionNumber"></p>
+
+    <div id="questionText"></div>
+
+    <div id="answers"></div>
+
+    <p id="quizMessage"></p>
+
+</section>
+
+</main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

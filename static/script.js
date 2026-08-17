@@ -1,0 +1,428 @@
+const questions = {
+    "Mathematics": [
+        {
+            question: "What is 12 × 8?",
+            answers: ["86", "96", "108", "112"],
+            correct: 1
+        },
+        {
+            question: "What is 144 ÷ 12?",
+            answers: ["10", "11", "12", "14"],
+            correct: 2
+        },
+        {
+            question: "What is 25% of 200?",
+            answers: ["25", "40", "50", "75"],
+            correct: 2
+        }
+    ],
+
+    "Computer Studies": [
+        {
+            question: "What does CPU stand for?",
+            answers: [
+                "Central Processing Unit",
+                "Computer Personal Unit",
+                "Central Program Utility",
+                "Computer Processing User"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which language is commonly used to create web pages?",
+            answers: ["Python", "HTML", "SQL", "C++"],
+            correct: 1
+        },
+        {
+            question: "Which device is used to enter text into a computer?",
+            answers: ["Monitor", "Speaker", "Keyboard", "Printer"],
+            correct: 2
+        }
+    ],
+
+    "English": [
+        {
+            question: "Which word is a noun?",
+            answers: ["Run", "Beautiful", "Teacher", "Quickly"],
+            correct: 2
+        },
+        {
+            question: "What is the opposite of 'ancient'?",
+            answers: ["Old", "Modern", "Historic", "Past"],
+            correct: 1
+        },
+        {
+            question: "Which sentence is grammatically correct?",
+            answers: [
+                "She go to school.",
+                "She going school.",
+                "She goes to school.",
+                "She gone to school."
+            ],
+            correct: 2
+        }
+    ],
+
+    "Science": [
+        {
+            question: "Which organ pumps blood around the body?",
+            answers: ["Lungs", "Brain", "Heart", "Kidney"],
+            correct: 2
+        },
+        {
+            question: "What gas do plants mainly use during photosynthesis?",
+            answers: [
+                "Oxygen",
+                "Carbon dioxide",
+                "Nitrogen",
+                "Hydrogen"
+            ],
+            correct: 1
+        },
+        {
+            question: "What force pulls objects toward Earth?",
+            answers: [
+                "Friction",
+                "Magnetism",
+                "Gravity",
+                "Pressure"
+            ],
+            correct: 2
+        }
+    ]
+};
+
+
+let currentSubject = "";
+let currentQuestion = "";
+let score = "";
+let answered = false;
+
+
+function startSubject(subject) {
+    if (!questions[subject]) {
+        console.error("No questions found for:", subject);
+        return;
+    }
+
+    currentSubject = subject;
+    currentQuestion = 0;
+    score = 0;
+
+    document.querySelector(".welcome").style.display = "none";
+    document.querySelector(".subjects").style.display = "none";
+
+    const quiz = document.getElementById("quiz");
+
+    if (!quiz) {
+        console.error("Quiz element not found!");
+        return;
+    }
+
+    quiz.style.display = "block";
+
+    displayQuestion();
+}
+
+
+function displayQuestion() {
+    const quiz = document.getElementById("quiz");
+
+    if (!quiz) {
+        console.error("Quiz element not found!");
+        return;
+    }
+
+    const questionData = questions[currentSubject][currentQuestion];
+    const total = questions[currentSubject].length;
+
+    answered = false;
+
+    const progress = (currentQuestion / total) * 100;
+
+    quiz.innerHTML = `
+        <h2>${currentSubject}</h2>
+
+        <div class="progress-container">
+            <div class="progress-bar" style="width: ${progress}%"></div>
+        </div>
+
+        <p class="question-number">
+            Question ${currentQuestion + 1} of ${total}
+        </p>
+
+        <h3 class="question">
+            ${questionData.question}
+        </h3>
+
+        <div class="answers">
+            ${questionData.answers.map((answer, index) => `
+                <button
+                    class="answer-btn"
+                    onclick="selectAnswer(${index})">
+                    ${answer}
+                </button>
+            `).join("")}
+        </div>
+
+        <div id="feedback"></div>
+
+        <button
+            id="next-btn"
+            onclick="nextQuestion()"
+            style="display: none;">
+            Next Question →
+        </button>
+    `;
+}
+
+
+function selectAnswer(selectedAnswer) {
+    if (answered) {
+        return;
+    }
+
+    answered = true;
+
+    const questionData = questions[currentSubject][currentQuestion];
+    const buttons = document.querySelectorAll(".answer-btn");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-btn");
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    if (selectedAnswer === questionData.correct) {
+        score++;
+
+        buttons[selectedAnswer].classList.add("correct");
+
+        feedback.textContent = "✓ Correct!";
+        feedback.className = "correct-text";
+    } else {
+        buttons[selectedAnswer].classList.add("incorrect");
+        buttons[questionData.correct].classList.add("correct");
+
+        feedback.textContent = "✗ Incorrect";
+        feedback.className = "incorrect-text";
+    }
+
+    nextButton.style.display = "block";
+}
+
+
+function nextQuestion() {
+    currentQuestion++;
+
+    if (currentQuestion < questions[currentSubject].length) {
+        displayQuestion();
+    } else {
+        showResult();
+    }
+}
+
+
+function showResult() {
+    const quiz = document.getElementById("quiz");
+    const total = questions[currentSubject].length;
+    const percentage = Math.round((score / total) * 100);
+
+    fetch("/save-result", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            subject: currentSubject,
+            score: score,
+            total: total
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+    })
+    .catch(error => {
+        console.error("Could not save result:", error);
+    });
+
+    quiz.innerHTML = `
+        <div class="result">
+
+            <h2>🎉 Quiz Complete!</h2>
+
+            <p>Your score:</p>
+
+            <div class="score">
+                ${score} / ${total}
+            </div>
+
+            <p class="percentage">
+                ${percentage}%
+            </p>
+
+            <button onclick="restartQuiz()">
+                Study Again
+            </button>
+
+            <button onclick="goHome()">
+                Back to Dashboard
+            </button>
+
+        </div>
+    `;
+}
+
+
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+
+    displayQuestion();
+}
+
+
+function goHome() {
+    location.reload();
+}
+let timerSeconds = 25 * 60;
+let timerInterval = null;
+
+function updateTimerDisplay() {
+    const timer = document.getElementById("timer");
+
+    if (!timer) {
+        return;
+    }
+
+    const minutes = Math.floor(timerSeconds / 60);
+    const seconds = timerSeconds % 60;
+
+    timer.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+}
+
+function startTimer() {
+
+    if (timerInterval !== null) {
+        return;
+    }
+
+    timerInterval = setInterval(() => {
+
+        if (timerSeconds > 0) {
+
+            timerSeconds--;
+
+            updateTimerDisplay();
+
+        } else {
+
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            alert("Study session complete!");
+
+        }
+
+    }, 1000);
+}
+
+function pauseTimer() {
+
+    if (timerInterval !== null) {
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+    }
+}
+
+function resetTimer() {
+
+    pauseTimer();
+
+    timerSeconds = 25 * 60;
+
+    updateTimerDisplay();
+}
+
+updateTimerDisplay();
+async function saveNotes() {
+    const textarea = document.getElementById("studyNotes");
+    const message = document.getElementById("notesMessage");
+
+    const content = textarea.value.trim();
+
+    if (!content) {
+        message.textContent = "Please write something first.";
+        return;
+    }
+
+    try {
+        const response = await fetch("/save-notes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: content
+            })
+        });
+
+        const data = await response.json();
+
+        message.textContent = data.message;
+
+        if (data.success) {
+            textarea.value = "";
+            loadNotes();
+        }
+
+    } catch (error) {
+        console.error(error);
+        message.textContent = "Could not save notes.";
+    }
+}
+
+
+async function loadNotes() {
+    const notesList = document.getElementById("notesList");
+
+    if (!notesList) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/get-notes");
+        const notes = await response.json();
+
+        notesList.innerHTML = "";
+
+        notes.forEach(note => {
+            const noteElement = document.createElement("div");
+
+            noteElement.className = "saved-note";
+
+            const paragraph = document.createElement("p");
+            paragraph.textContent = note.content;
+
+            const date = document.createElement("small");
+            date.textContent = note.created_at;
+
+            noteElement.appendChild(paragraph);
+            noteElement.appendChild(date);
+
+            notesList.appendChild(noteElement);
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+loadNotes();

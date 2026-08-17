@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Study App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <header>
+            <h1>📚 Student Study App</h1>
+            <p>Learn, practice, and track your progress.</p>
+        </header>
+
+        <main>
+
+            <section id="start-screen">
+                <h2>Choose a Subject</h2>
+
+                <div class="subjects">
+                    <button onclick="startQuiz('Mathematics')">
+                        Mathematics
+                    </button>
+
+                    <button onclick="startQuiz('Computer Studies')">
+                        Computer Studies
+                    </button>
+
+                    <button onclick="startQuiz('English')">
+                        English
+                    </button>
+
+                    <button onclick="startQuiz('Science')">
+                        Science
+                    </button>
+                </div>
+            </section>
+
+            <section id="quiz-screen" class="hidden">
+
+                <div class="quiz-header">
+                    <span id="subject-name">Subject</span>
+                    <span>Score: <strong id="score">0</strong></span>
+                </div>
+
+                <h2 id="question">Question goes here</h2>
+
+                <div id="answers"></div>
+
+                <button id="next-btn" onclick="nextQuestion()">
+                    Next Question
+                </button>
+
+            </section>
+
+            <section id="result-screen" class="hidden">
+
+                <h2>🎉 Quiz Complete!</h2>
+
+                <p>Your final score is:</p>
+
+                <div id="final-score">0 / 0</div>
+
+                <button onclick="restartQuiz()">
+                    Study Again
+                </button>
+
+            </section>
+<section id="quiz" class="quiz" style="display: none;"></section>
+
+        </main>
+
+        <footer>
+            <p>Student Study App © 2026</p>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
