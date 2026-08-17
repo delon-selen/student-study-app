@@ -178,6 +178,15 @@ nav a {
     background: #fee2e2;
 }
 
+.answer-btn {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.answer-btn:hover:not(:disabled) {
+    transform: none;
+}
+
 #feedback {
     font-size: 20px;
     font-weight: bold;
@@ -368,4 +377,54 @@ nav a {
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+}
+.back-btn {
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.back-btn:hover {
+    opacity: 0.85;
+}
+.quiz {
+    min-height: 70vh;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.quiz h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.question {
+    font-size: 22px;
+    line-height: 1.5;
+    margin: 30px 0;
+}
+
+.answers {
+    display: grid;
+    gap: 15px;
+}
+
+.answer-btn {
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 17px;
+    text-align: left;
+}
+
+#next-btn {
+    margin-top: 20px;
+    padding: 14px 22px;
+    cursor: pointer;
 }

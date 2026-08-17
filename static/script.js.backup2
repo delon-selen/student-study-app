@@ -98,6 +98,7 @@ let currentQuestion = "";
 let score = "";
 let answered = false;
 
+
 function startSubject(subject) {
     if (!questions[subject]) {
         console.error("No questions found for:", subject);
@@ -109,9 +110,7 @@ function startSubject(subject) {
     score = 0;
 
     document.querySelector(".welcome").style.display = "none";
-    document.querySelector(".subjects-section").style.display = "none";
-    document.querySelector(".timer-card").style.display = "none";
-    document.querySelector(".notes-card").style.display = "none";
+    document.querySelector(".subjects").style.display = "none";
 
     const quiz = document.getElementById("quiz");
 
@@ -122,12 +121,8 @@ function startSubject(subject) {
 
     quiz.style.display = "block";
 
-    window.scrollTo(0, 0);
-
     displayQuestion();
 }
-
-
 
 
 function displayQuestion() {
@@ -145,12 +140,8 @@ function displayQuestion() {
 
     const progress = (currentQuestion / total) * 100;
 
-quiz.innerHTML = `
-    <button class="back-btn" onclick="goHome()">
-        ← Back to Subjects
-    </button>
-
-    <h2>${currentSubject}</h2>
+    quiz.innerHTML = `
+        <h2>${currentSubject}</h2>
 
         <div class="progress-container">
             <div class="progress-bar" style="width: ${progress}%"></div>
@@ -272,12 +263,12 @@ function showResult() {
             </p>
 
             <button onclick="restartQuiz()">
-    Study Again
-</button>
+                Study Again
+            </button>
 
-<button onclick="goHome()">
-    Back to Subjects
-</button>sss
+            <button onclick="goHome()">
+                Back to Dashboard
+            </button>
 
         </div>
     `;
@@ -291,20 +282,12 @@ function restartQuiz() {
     displayQuestion();
 }
 
+
 function goHome() {
-    document.getElementById("quiz").style.display = "none";
-
-    document.querySelector(".welcome").style.display = "block";
-    document.querySelector(".subjects-section").style.display = "block";
-    document.querySelector(".timer-card").style.display = "block";
-    document.querySelector(".notes-card").style.display = "block";
-
-    currentSubject = "";
-    currentQuestion = 0;
-    score = 0;
-
-    window.scrollTo(0, 0);
+    location.reload();
 }
+let timerSeconds = 25 * 60;
+let timerInterval = null;
 
 function updateTimerDisplay() {
     const timer = document.getElementById("timer");

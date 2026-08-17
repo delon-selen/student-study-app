@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Study App</title>
+    <link rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}">
+
+<meta name="theme-color" content="#2563eb">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -23,6 +27,8 @@
     </header>
 
     <main class="container">
+
+        <section id="quiz" class="quiz" style="display: none;"></section>
 
         <section class="welcome">
             <h1>Welcome to your Study Dashboard</h1>
@@ -64,7 +70,7 @@
             </div>
 
         </section>
-<section id="quiz" class="quiz" style="display: none;"></section>
+
 
 <section class="timer-card">
 
@@ -144,19 +150,9 @@
 
 </section>
 
-<section id="quizSection" class="quiz-section" style="display: none;">
 
-    <h2 id="quizTitle">Quiz</h2>
 
-    <p id="questionNumber"></p>
 
-    <div id="questionText"></div>
-
-    <div id="answers"></div>
-
-    <p id="quizMessage"></p>
-
-</section>
 
 </main>
 
