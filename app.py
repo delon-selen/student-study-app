@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 
@@ -94,12 +95,14 @@ def register():
                 error="That username already exists."
             )
 
+        hashed_password = generate_password_hash(password)
+
         connection.execute(
             """
             INSERT INTO users (username, password)
             VALUES (?, ?)
             """,
-            (username, password)
+            (username, hashed_password)
         )
 
         connection.commit()
@@ -123,14 +126,14 @@ def login():
         user = connection.execute(
             """
             SELECT * FROM users
-            WHERE username = ? AND password = ?
+            WHERE username = ?
             """,
-            (username, password)
+            (username,)
         ).fetchone()
 
         connection.close()
 
-        if user:
+        if user and check_password_hash(user["password"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
 
