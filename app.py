@@ -131,13 +131,34 @@ def login():
             (username,)
         ).fetchone()
 
+        if user:
+            stored_password = user["password"]
+
+            # Support older accounts that stored passwords as plain text.
+            if stored_password.startswith(("pbkdf2:", "scrypt:")):
+                valid_password = check_password_hash(
+                    stored_password, password
+                )
+            else:
+                valid_password = stored_password == password
+
+                if valid_password:
+                    new_hash = generate_password_hash(password)
+
+                    connection.execute(
+                        "UPDATE users SET password = ? WHERE id = ?",
+                        (new_hash, user["id"])
+                    )
+                    connection.commit()
+
+            if valid_password:
+                session["user_id"] = user["id"]
+                session["username"] = user["username"]
+
+                connection.close()
+                return redirect(url_for("home"))
+
         connection.close()
-
-        if user and check_password_hash(user["password"], password):
-            session["user_id"] = user["id"]
-            session["username"] = user["username"]
-
-            return redirect(url_for("home"))
 
         return render_template(
             "login.html",
