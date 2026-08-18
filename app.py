@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import sqlite3
+import os
 
 app = Flask(__name__)
 
 app.secret_key = "local-study-app-key"
 
-DATABASE = "study.db"
+DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "study.db")
 
 
 def get_db():
